@@ -7,6 +7,8 @@
     * Open-Meteo API
     * Open-Meteo API Documentation
 * エンドポイントと機能
+　　* https://api.open-meteo.com/v1/forecast
+　　* 天気予報データを提供すること
 * リクエストとレスポンスのフォーマット
 ### Q3-3. 感想
 * 今回の課題で苦労したこと
