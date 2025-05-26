@@ -4,8 +4,8 @@
 * リクエストとレスポンスのフォーマット
 ### Q3-2. 各自で調査したAPIについて説明せよ。
 * APIの名称と参照URL
-* 　Open-Meteo API
-* 　Open-Meteo API Documentation
+    * Open-Meteo API
+    * Open-Meteo API Documentation
 * エンドポイントと機能
 * リクエストとレスポンスのフォーマット
 ### Q3-3. 感想
