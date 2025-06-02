@@ -5,18 +5,35 @@
 </head>
 <body>
     <h1 id="msg">郵便番号API</h1>
-    <form name="apiform"><p>
-        郵便番号：<input type="text" name="zipcode">
-        <button type="button" id="btn1" onclick="zip_api(this.form)">実行</button>
-    </p></form>
-    
+    <form name="apiform">
+        <p>
+            郵便番号：<input type="text" name="zipcode">
+            <button type="button" id="btn1" onclick="zip_api(this.form)">実行</button>
+        </p>
+    </form>
     <div id="result">結果はここに表示</div>
     <script>
         async function zip_api(myForm) {
             const endpoint = "https://zipcloud.ibsnet.co.jp/api/search";
             // ここにコードを書く
             // zipcloudのAPI呼び出して結果を表示する
-            document.getElementById("result").innerHTML =  myForm.zipcode.value; // 現状ではそのまま表示しているだけ
+            const zipcode = myForm.zipcode.value;
+            try {
+                //返ってきたHTTPレスポンスの情報を response という変数に格納する
+                const response = await fetch(`${endpoint}?zipcode=${zipcode}`);
+                const data = await response.json();
+
+                if (data.status === 200 && data.results) {
+                    const address = data.results[0];
+                    document.getElementById("result").innerHTML = `
+                        <h3>結果:</h3>
+                        ${address.address1}${address.address2}${address.address3}
+                    `;
+                }
+            } catch (error) {
+                console.error("API呼び出し中にエラーが発生しました:", error);
+                document.getElementById("result").innerHTML = "API呼び出し中にエラーが発生しました。";
+            }
         }
     </script>
 </body>

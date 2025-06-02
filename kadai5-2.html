@@ -1,21 +1,58 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>演習課題5-2：外部APIの呼び出しテスト</title>
+    <title>演習課題5-1：Fetch APIのテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
-    <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
-        <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
-    </p></form>
-    
+    <h1 id="msg"> 天気予報</h1>
+    <p>千葉の現在の気温と天気情報を取得します。</p>
+    <button type="button" id="btn1">天気予報を取得</button>
     <div id="result"></div>
     <script>
-        async function some_api(myForm) {
+        btn1 = document.getElementById("btn1");
+        btn1.onclick = async () => {
             // ここにコードを書く
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
-            document.apiform.reset();
+            // Open-Meteo APIの呼び出しと結果表示
+            const endpoint = "https://api.open-meteo.com/v1/forecast";
+            const latitude = 35.6048;  // 千葉の緯度
+            const longitude = 140.1197; // 千葉の経度
+
+            const params = new URLSearchParams({
+                latitude: latitude,
+                longitude: longitude,
+                current_weather: true,
+                timezone: 'Asia/Tokyo'
+            });
+
+            try {
+                const response = await fetch(`${endpoint}?${params.toString()}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー！ステータス: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.current_weather) {
+                    const weather = data.current_weather;
+                    document.getElementById("result").innerHTML = `
+                        <h3>千葉の現在の天気</h3>
+                        <p>気温: ${weather.temperature}°C</p>
+                        <p>風速: ${weather.windspeed} km/h</p>
+                        <p>風向き: ${weather.winddirection}°</p>
+                        <p>現在の時間: ${new Date(weather.time).toLocaleString('ja-JP')}</p>
+                    `;
+                } else {
+                    document.getElementById("result").innerHTML = `
+                        <h3>エラー:</h3>
+                        <p>現在の天気情報を取得できませんでした。</p>
+                    `;
+                }
+            } catch (error) {
+                console.error("API呼び出し中にエラーが発生しました:", error);
+                document.getElementById("result").innerHTML = `
+                    <h3>エラー</h3>
+                `;
+            }
         }
     </script>
 </body>
